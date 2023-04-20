@@ -369,7 +369,8 @@ contract VoxStakingPool is ReentrancyGuard, Pausable {
     {
         // Cannot recover the staking token or the rewards token
         require(
-            tokenAddress != address(rewardsToken),
+            tokenAddress != address(rewardsToken) &&
+            tokenAddress != address(stakingToken),
             "Cannot withdraw the staking or rewards tokens"
         );
         IERC20(tokenAddress).safeTransfer(owner(), tokenAmount);
