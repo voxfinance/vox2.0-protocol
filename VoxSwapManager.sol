@@ -67,7 +67,7 @@ contract VoxSwapManager is Ownable2Step {
             0, // slippage is unavoidable
             0, // slippage is unavoidable
             owner(),
-            block.timestamp
+            block.timestamp + 2 minutes
         );
 
         emit AddLiquidity(voxAmount, wethAmount, block.timestamp);
@@ -94,7 +94,7 @@ contract VoxSwapManager is Ownable2Step {
             0,
             path,
             address(this),
-            block.timestamp
+            block.timestamp + 2 minutes
         );
 
         IERC20(vox.weth()).transfer(address(vox), IERC20(vox.weth()).balanceOf(address(this)));
@@ -121,7 +121,7 @@ contract VoxSwapManager is Ownable2Step {
             0,
             path,
             address(this),
-            block.timestamp
+            block.timestamp + 2 minutes
         );
 
         uint balance = vox.balanceOf(address(this));
