@@ -286,11 +286,11 @@ contract VoxToken is ERC20, Ownable2Step {
                             !_isExcludedFromFees[from]
                         ) {
                             require(
-                                _holderLastTransferTimestamp[tx.origin] <
+                                _holderLastTransferTimestamp[msg.sender] <
                                     block.number,
                                 "_transfer:: Transfer Delay enabled.  Only one purchase per block allowed."
                             );
-                            _holderLastTransferTimestamp[tx.origin] = block.number;
+                            _holderLastTransferTimestamp[msg.sender] = block.number;
                         }
                     }
 
