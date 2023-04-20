@@ -260,6 +260,7 @@ contract VoxStakingPool is ReentrancyGuard, Pausable {
 
     function getReward() public nonReentrant updateReward(msg.sender) {
         uint reward = rewards[msg.sender];
+        if (reward == 0) revert ZeroRewards();
         if (reward > 0) {
             rewards[msg.sender] = 0;
             rewardsToken.safeTransfer(msg.sender, reward);
@@ -269,6 +270,7 @@ contract VoxStakingPool is ReentrancyGuard, Pausable {
 
     function stakeReward() public nonReentrant notPaused updateReward(msg.sender) {
         uint reward = rewards[msg.sender];
+        if (reward == 0) revert ZeroRewards();
         if (reward > 0) {
             rewards[msg.sender] = 0;
             _deposit(msg.sender, reward);
@@ -438,6 +440,8 @@ contract VoxStakingPool is ReentrancyGuard, Pausable {
 
         _;
     }
+
+    error ZeroRewards();
 
     // EVENTS
 

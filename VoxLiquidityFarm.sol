@@ -139,6 +139,7 @@ contract VoxLiquidityFarm is ReentrancyGuard, Pausable {
 
     function getReward() public nonReentrant updateReward(msg.sender) {
         uint reward = rewards[msg.sender];
+        if (reward == 0) revert ZeroRewards();
         if (reward > 0) {
             rewards[msg.sender] = 0;
             rewardsToken.safeTransfer(msg.sender, reward);
@@ -149,6 +150,7 @@ contract VoxLiquidityFarm is ReentrancyGuard, Pausable {
     function stakeReward() public nonReentrant updateReward(msg.sender) {
         require(address(stakingPool) != address(0), "!stakingPool");
         uint reward = rewards[msg.sender];
+        if (reward == 0) revert ZeroRewards();
         if (reward > 0) {
             rewards[msg.sender] = 0;
             stakingPool.depositFor(msg.sender, reward);
@@ -262,6 +264,8 @@ contract VoxLiquidityFarm is ReentrancyGuard, Pausable {
 
         _;
     }
+
+    error ZeroRewards();
 
     // EVENTS
 
