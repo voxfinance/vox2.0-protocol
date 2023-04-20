@@ -60,10 +60,11 @@ contract VoxStakingPool is ReentrancyGuard, Pausable {
         address _rewardsToken,
         address _stakingToken
     ) {
+        require(_rewardsToken != address(0) 
+            && _stakingToken != address(0),
+            "Rewards and staking token can not be null address!");
         rewardsToken = IERC20(_rewardsToken);
-        if (_stakingToken != address(0)) {
-            stakingToken = IERC20(_stakingToken);
-        }
+        stakingToken = IERC20(_stakingToken);
     }
 
     // VIEWS
