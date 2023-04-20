@@ -202,10 +202,9 @@ contract VoxLiquidityFarm is ReentrancyGuard, Pausable {
 
         if (block.timestamp >= periodFinish) {
             rewardRate = reward.div(rewardsDuration);
+            periodFinish = block.timestamp.add(rewardsDuration);
         } else {
-            uint remaining = periodFinish.sub(block.timestamp);
-            uint leftover = remaining.mul(rewardRate);
-            rewardRate = reward.add(leftover).div(rewardsDuration);
+            rewardRate += reward / (periodFinish - block.timestamp);
         }
 
         // Ensure the provided reward amount is not more than the balance in the contract.
@@ -219,7 +218,6 @@ contract VoxLiquidityFarm is ReentrancyGuard, Pausable {
         );
 
         lastUpdateTime = block.timestamp;
-        periodFinish = block.timestamp.add(rewardsDuration);
         emit RewardAdded(reward);
     }
 
