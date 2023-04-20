@@ -2,7 +2,7 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/access/Ownable2Step.sol";
 
 /*
     VOX FINANCE 2.0
@@ -12,7 +12,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
     Telegram: https://t.me/VoxFinance
  */
 
-contract VoxTokenAirdrop is Ownable {
+contract VoxTokenAirdrop is Ownable2Step {
     // This declares a state variable that would store the contract address
     IERC20 public token;
 

@@ -3,7 +3,6 @@ pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "./utils/Pausable.sol";
 
@@ -312,25 +311,25 @@ contract VoxStakingPool is ReentrancyGuard, Pausable {
         _totalSupply = _totalSupply.add(shares);
     }
 
-    // RESTRICTED FUNCTIONS
+    // OWNER FUNCTIONS
 
     function togglePool(address _pool)
         external
-        restricted
+        onlyOwner
     {
         _pools[_pool] = !_pools[_pool];
     }
 
     function togglePrivatePool(address _pool)
         external
-        restricted
+        onlyOwner
     {
         _privatePools[_pool] = !_privatePools[_pool];
     }
 
     function notifyRewardAmount(uint reward)
         external
-        restricted
+        onlyOwner
         updateReward(address(0))
     {
         uint oldBalance = rewardsToken.balanceOf(address(this));
@@ -375,7 +374,10 @@ contract VoxStakingPool is ReentrancyGuard, Pausable {
         emit Recovered(tokenAddress, tokenAmount);
     }
 
-    function setRewardsDuration(uint _rewardsDuration) external restricted {
+    function setRewardsDuration(uint _rewardsDuration) 
+        external 
+        onlyOwner 
+    {
         require(
             block.timestamp > periodFinish,
             "Previous rewards period must be complete before changing the duration for the new period"
@@ -389,7 +391,7 @@ contract VoxStakingPool is ReentrancyGuard, Pausable {
 
     function setTreasury(address _treasury)
         external
-        restricted
+        onlyOwner
     {
         require(msg.sender == address(treasury), "!treasury");
         treasury = _treasury;
@@ -397,13 +399,16 @@ contract VoxStakingPool is ReentrancyGuard, Pausable {
 
     function setWithdrawalFee(uint _withdrawalFee)
         external
-        restricted
+        onlyOwner
     {
         require(_withdrawalFee <= withdrawalFeeMax, "!withdrawalFee");
         withdrawalFee = _withdrawalFee;
     }
 
-    function setLockingPeriods(uint _minimumLock, uint _maximumLock) external restricted {
+    function setLockingPeriods(uint _minimumLock, uint _maximumLock) 
+        external 
+        onlyOwner 
+    {
         require(
             _maximumLock <= 52 weeks,
             '!maximumLock'
@@ -416,7 +421,7 @@ contract VoxStakingPool is ReentrancyGuard, Pausable {
         maximumLock = _maximumLock;
     }
 
-    function setMultiplier(uint _multiplier) external restricted {
+    function setMultiplier(uint _multiplier) external onlyOwner {
         multiplier = _multiplier;
     }
 
@@ -429,15 +434,6 @@ contract VoxStakingPool is ReentrancyGuard, Pausable {
             rewards[account] = earned(account);
             userRewardPerTokenPaid[account] = rewardPerTokenStored;
         }
-
-        _;
-    }
-
-    modifier restricted {
-        require(
-            msg.sender == owner(),
-            '!restricted'
-        );
 
         _;
     }

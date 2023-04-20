@@ -3,7 +3,6 @@ pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "./utils/Pausable.sol";
 
@@ -163,11 +162,11 @@ contract VoxLiquidityFarm is ReentrancyGuard, Pausable {
         getReward();
     }
 
-    // RESTRICTED FUNCTIONS
+    // OWNER FUNCTIONS
 
     function setTreasury(address _treasury)
         external
-        restricted
+        onlyOwner
     {
         require(msg.sender == address(treasury), "!treasury");
         treasury = _treasury;
@@ -175,7 +174,7 @@ contract VoxLiquidityFarm is ReentrancyGuard, Pausable {
 
     function setStakingPool(address _stakingPool)
         external
-        restricted
+        onlyOwner
     {
         require(address(_stakingPool) != address(0), "!stakingPool");
         stakingPool = IStakingPool(_stakingPool);
@@ -183,7 +182,7 @@ contract VoxLiquidityFarm is ReentrancyGuard, Pausable {
 
     function setWithdrawalFee(uint _withdrawalFee)
         external
-        restricted
+        onlyOwner
     {
         require(_withdrawalFee < withdrawalFeeMax, "!withdrawalFee");
         withdrawalFee = _withdrawalFee;
@@ -191,7 +190,7 @@ contract VoxLiquidityFarm is ReentrancyGuard, Pausable {
 
     function notifyRewardAmount(uint reward)
         external
-        restricted
+        onlyOwner
         updateReward(address(0))
     {
         uint oldBalance = rewardsToken.balanceOf(address(this));
@@ -236,7 +235,10 @@ contract VoxLiquidityFarm is ReentrancyGuard, Pausable {
         emit Recovered(tokenAddress, tokenAmount);
     }
 
-    function setRewardsDuration(uint _rewardsDuration) external restricted {
+    function setRewardsDuration(uint _rewardsDuration) 
+        external 
+        onlyOwner 
+    {
         require(
             block.timestamp > periodFinish,
             "Previous rewards period must be complete before changing the duration for the new period"
@@ -257,15 +259,6 @@ contract VoxLiquidityFarm is ReentrancyGuard, Pausable {
             rewards[account] = earned(account);
             userRewardPerTokenPaid[account] = rewardPerTokenStored;
         }
-
-        _;
-    }
-
-    modifier restricted {
-        require(
-            msg.sender == owner(),
-            '!restricted'
-        );
 
         _;
     }

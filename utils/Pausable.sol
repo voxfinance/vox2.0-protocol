@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/access/Ownable2Step.sol";
 
-abstract contract Pausable is Ownable {
+abstract contract Pausable is Ownable2Step {
     uint public lastPauseTime;
     bool public paused;
 

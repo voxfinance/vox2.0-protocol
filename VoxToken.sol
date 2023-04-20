@@ -2,7 +2,7 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/access/Ownable2Step.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 
 import "./interfaces/IUniswapV2Factory.sol";
@@ -17,7 +17,7 @@ import "./interfaces/ISwapManager.sol";
     Telegram: https://t.me/VoxFinance
  */
 
-contract VoxToken is ERC20, Ownable {
+contract VoxToken is ERC20, Ownable2Step {
     using SafeMath for uint;
 
     IUniswapV2Router02 public immutable uniswapV2Router;
