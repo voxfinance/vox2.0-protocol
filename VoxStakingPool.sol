@@ -425,6 +425,9 @@ contract VoxStakingPool is ReentrancyGuard, Pausable {
     }
 
     function setMultiplier(uint _multiplier) external onlyOwner {
+        require (_multiplier < 10 
+            && _multiplier > 0,
+            "Multiplier not within bounds!");
         multiplier = _multiplier;
     }
 
