@@ -343,7 +343,7 @@ contract VoxStakingPool is ReentrancyGuard, Pausable {
             rewardRate = reward.div(rewardsDuration);
             periodFinish = block.timestamp.add(rewardsDuration);
         } else {
-            rewardRate += reward / (periodFinish - block.timestamp)
+            rewardRate += reward / (periodFinish - block.timestamp);
         }
 
         // Ensure the provided reward amount is not more than the balance in the contract.
@@ -380,6 +380,9 @@ contract VoxStakingPool is ReentrancyGuard, Pausable {
             block.timestamp > periodFinish,
             "Previous rewards period must be complete before changing the duration for the new period"
         );
+        require(_rewardsDuration > 0 
+            && _rewardsDuration <= 4 years,
+            "Rewards duration is not within bounds");
         rewardsDuration = _rewardsDuration;
         emit RewardsDurationUpdated(rewardsDuration);
     }

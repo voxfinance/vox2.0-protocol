@@ -241,6 +241,9 @@ contract VoxLiquidityFarm is ReentrancyGuard, Pausable {
             block.timestamp > periodFinish,
             "Previous rewards period must be complete before changing the duration for the new period"
         );
+        require(_rewardsDuration > 0 
+            && _rewardsDuration <= 4 years,
+            "Rewards duration is not within bounds");
         rewardsDuration = _rewardsDuration;
         emit RewardsDurationUpdated(rewardsDuration);
     }
